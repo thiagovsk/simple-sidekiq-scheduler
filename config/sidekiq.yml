@@ -1,0 +1,9 @@
+---
+:concurrency: <%= ENV["CONCURRENCY"] || 25 %>
+:queues:
+ - default
+
+:schedule:
+  hello_world:
+    cron: '0 * * * * *'   # Runs once per minute
+    class: MyWorker

@@ -4,23 +4,40 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:   # permite rodar manualmente
-  schedule:            # agendamento diário
-    - cron: '0 0 * * *'  # todo dia à meia-noite UTC (ajuste o horário se precisar)
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # todo dia à meia-noite UTC
 
 jobs:
   rubycritic:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout da main
       - uses: actions/checkout@v3
 
+      # 2️⃣ Setup Ruby
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
+      # 4️⃣ Run RubyCritic
       - name: Run RubyCritic
-        run: bundle exec rubycritic -p docs
+        run: |
+          rm -rf docs/* || true           # limpa pasta antiga
+          bundle exec rubycritic -p docs  # gera o HTML
+
+      # 5️⃣ Deploy to gh-pages
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          keep_files: false 

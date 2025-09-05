@@ -1,13 +1,26 @@
-name: Festalab Rubocop
+name: RubyCritic Report
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:   # permite rodar manualmente
+  schedule:            # agendamento diário
+    - cron: '0 0 * * *'  # todo dia à meia-noite UTC (ajuste o horário se precisar)
 
 jobs:
-  Rubocop:
+  rubycritic:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Rubocop
-        uses: andrewmcodes/rubocop-linter-action@v3.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Run RubyCritic
+        run: bundle exec rubycritic -p docs

@@ -1,0 +1,12 @@
+paths:
+  - 'app/models'
+  - 'app/services'
+  - 'app/presenters'
+  - 'app/controllers'
+  - 'app/workers'
+  - 'app/jobs'
+  - 'app/finders'
+  - 'app/policies'
+  - 'app/validators'
+  - 'lib'
+  - 'db/seeds'

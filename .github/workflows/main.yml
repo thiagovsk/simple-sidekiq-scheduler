@@ -25,13 +25,25 @@ jobs:
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
 
-      # 4️⃣ Run RubyCritic
-      - name: Run RubyCritic
+      # 4️⃣ Prepare docs folder
+      - name: Prepare docs folder
         run: |
-          rm -rf docs/* || true           # limpa pasta antiga
-          bundle exec rubycritic -p docs  # gera o HTML
+          mkdir -p docs
+          touch docs/.nojekyll
 
-      # 5️⃣ Deploy to gh-pages
+      # 5️⃣ Run RubyCritic
+      - name: Run RubyCritic
+        run: bundle exec rubycritic -p docs
+
+      # 6️⃣ Move RubyCritic content to root of docs if necessary
+      - name: Flatten RubyCritic output
+        run: |
+          if [ -d docs/rubycritic ]; then
+            mv docs/rubycritic/* docs/
+            rm -rf docs/rubycritic
+          fi
+
+      # 7️⃣ Deploy to gh-pages
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v6
         with:
@@ -40,4 +52,4 @@ jobs:
           publish_branch: gh-pages
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
-          keep_files: false 
+          keep_files: false

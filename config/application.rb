@@ -8,4 +8,4 @@ Bundler.require
 ENV['RACK_ENV'] ||= 'development'
 
 require_relative 'initializers/sidekiq'
-Dir["./app/workers/*.rb"].each {|file| require file }
+Dir['./app/workers/*.rb'].sort.each { |file| require file }

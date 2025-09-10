@@ -8,7 +8,7 @@ require 'sidekiq/testing'
 Sidekiq::Testing.fake!
 
 # Load the application files
-Dir[File.expand_path('../../app/**/*.rb', __dir__)].sort.each { |f| require f }
+require_relative '../config/application'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

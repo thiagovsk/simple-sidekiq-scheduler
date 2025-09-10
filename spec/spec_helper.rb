@@ -8,7 +8,7 @@ require 'sidekiq/testing'
 Sidekiq::Testing.fake!
 
 # Load the application files
-Dir[File.expand_path('../../app/**/*.rb', __dir__)].each { |f| require f }
+Dir[File.expand_path('../../app/**/*.rb', __dir__)].sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -20,7 +20,6 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
-  
   # Clear Sidekiq jobs between tests
   config.before(:each) do
     Sidekiq::Worker.clear_all

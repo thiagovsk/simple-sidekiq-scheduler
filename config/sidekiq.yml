@@ -7,3 +7,6 @@
   hello_world:
     cron: '0 * * * * *'   # Runs once per minute
     class: MyWorker
+  daily_hello:
+    cron: '0 0 * * *'     # Runs once per day at midnight
+    class: DailyHelloWorker
